@@ -14,6 +14,9 @@ const showdownHighlight = require("showdown-highlight");
 //   }
 // );
 
+const VIEW_PREVIEW = 'view preview'
+const VIEW_RAW = 'view raw'
+const VIEW_SOURCE_ELEMENT = document.createElement('button');
 const converter = new showdown.Converter(
   {
     extensions: [showdownHighlight({
@@ -29,12 +32,19 @@ const isIncludePRE = () => document.body && (document.body.childNodes[0] && docu
 
 const mdToHtml = () => {
   const textElement = document.body.childNodes[0]
-  if (!mdText) {
-    mdText = textElement.innerText
-  }
-  if (!mdHTML) {
-    mdHTML = converter.makeHtml(mdText);
-  }
+  mdText = textElement.innerText
+  mdHTML = converter.makeHtml(mdText);
+  setHTML();
+}
+
+const setRaw = () => {
+  const textElement = document.body.childNodes[0]
+  textElement.innerHTML = mdText;
+  textElement.style = '';
+}
+
+const setHTML = () => {
+  const textElement = document.body.childNodes[0]
   textElement.innerHTML = mdHTML;
   textElement.style = 'white-space: unset; word-wrap: unset; max-width: 1012px; margin: auto';
 }
@@ -56,10 +66,55 @@ const applyHighlightStyle = () => {
     document.head.appendChild(githubCss);
 }
 
+const setViewRawButton = () => {
+	VIEW_SOURCE_ELEMENT.title = VIEW_RAW;
+	VIEW_SOURCE_ELEMENT.innerText = VIEW_RAW;
+  VIEW_SOURCE_ELEMENT.addEventListener(
+    'click',
+    () => {
+      setViewPreviewButton();
+      setRaw();
+    },
+    false
+  );
+}
+
+const setViewPreviewButton = () => {
+	VIEW_SOURCE_ELEMENT.title = VIEW_PREVIEW;
+	VIEW_SOURCE_ELEMENT.innerText = VIEW_PREVIEW;
+  VIEW_SOURCE_ELEMENT.addEventListener(
+    'click',
+    () => {
+      setViewRawButton();
+      setHTML();
+    },
+    false
+  );
+}
+
+const addActionBar = () => {
+	document.body.appendChild(VIEW_SOURCE_ELEMENT);
+  VIEW_SOURCE_ELEMENT.style = `
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 6px 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+  `
+  setViewRawButton()
+}
+
 async function init() {
 	if (isIncludePRE()) {
     applyHighlightStyle()
     applyGlobalStyle()
+    addActionBar()
     mdToHtml()
 	}
 }
