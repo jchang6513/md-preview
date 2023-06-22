@@ -54,7 +54,7 @@ const applyGlobalStyle = () => {
   style.innerHTML = `
     body { font-size: 16px }
     a { text-decoration: none; }
-    code { background: #f8f8f8; }
+    code { background: rgba(175, 184, 193, 0.2); }
   `;
   document.body.appendChild(style);
 }
@@ -104,7 +104,7 @@ const addActionBar = () => {
     padding: 6px 16px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    background: transparent;
+    background: white;
     cursor: pointer;
   `
   setViewRawButton()
