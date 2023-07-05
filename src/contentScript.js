@@ -66,34 +66,22 @@ const applyHighlightStyle = () => {
     document.head.appendChild(githubCss);
 }
 
-const setViewRawButton = () => {
-	VIEW_SOURCE_ELEMENT.title = VIEW_RAW;
-	VIEW_SOURCE_ELEMENT.innerText = VIEW_RAW;
-  VIEW_SOURCE_ELEMENT.addEventListener(
-    'click',
-    () => {
-      setViewPreviewButton();
-      setRaw();
-    },
-    false
-  );
-}
-
-const setViewPreviewButton = () => {
-	VIEW_SOURCE_ELEMENT.title = VIEW_PREVIEW;
-	VIEW_SOURCE_ELEMENT.innerText = VIEW_PREVIEW;
-  VIEW_SOURCE_ELEMENT.addEventListener(
-    'click',
-    () => {
-      setViewRawButton();
-      setHTML();
-    },
-    false
-  );
+const changeView = () => {
+  if (VIEW_SOURCE_ELEMENT.title == VIEW_RAW) {
+    VIEW_SOURCE_ELEMENT.title = VIEW_PREVIEW;
+    VIEW_SOURCE_ELEMENT.innerText = VIEW_PREVIEW;
+    setRaw();
+  } else {
+    VIEW_SOURCE_ELEMENT.title = VIEW_RAW;
+    VIEW_SOURCE_ELEMENT.innerText = VIEW_RAW;
+    setHTML();
+  }
 }
 
 const addActionBar = () => {
 	document.body.appendChild(VIEW_SOURCE_ELEMENT);
+  VIEW_SOURCE_ELEMENT.title = VIEW_RAW;
+  VIEW_SOURCE_ELEMENT.innerText = VIEW_RAW;
   VIEW_SOURCE_ELEMENT.style = `
     position: fixed;
     top: 10px;
@@ -107,7 +95,11 @@ const addActionBar = () => {
     background: white;
     cursor: pointer;
   `
-  setViewRawButton()
+  VIEW_SOURCE_ELEMENT.addEventListener(
+    'click',
+    changeView,
+    false
+  );
 }
 
 async function init() {
